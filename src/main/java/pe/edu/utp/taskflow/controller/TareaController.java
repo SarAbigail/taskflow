@@ -14,6 +14,7 @@ import pe.edu.utp.taskflow.model.Estado;
 import pe.edu.utp.taskflow.model.Prioridad;
 import pe.edu.utp.taskflow.model.Tarea;
 import pe.edu.utp.taskflow.service.TareaService;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class TareaController {
@@ -25,10 +26,19 @@ public class TareaController {
   }
 
   @GetMapping("/")
-  public String mostrarInicio(Model model) {
-    model.addAttribute("tareas", tareaService.listarTodas());
+  public String mostrarInicio(
+      @RequestParam(required = false) String titulo,
+      @RequestParam(required = false) Estado estado,
+      @RequestParam(required = false) Prioridad prioridad,
+      Model model) {
 
-    model.addAttribute("totalTareas", tareaService.contarTodas());
+    model.addAttribute(
+        "tareas",
+        tareaService.buscar(titulo, estado, prioridad));
+
+    model.addAttribute(
+        "totalTareas",
+        tareaService.contarTodas());
 
     model.addAttribute(
         "tareasPendientes",
@@ -41,6 +51,13 @@ public class TareaController {
     model.addAttribute(
         "tareasCompletadas",
         tareaService.contarPorEstado(Estado.COMPLETADA));
+
+    model.addAttribute("tituloFiltro", titulo);
+    model.addAttribute("estadoFiltro", estado);
+    model.addAttribute("prioridadFiltro", prioridad);
+
+    model.addAttribute("estados", Estado.values());
+    model.addAttribute("prioridades", Prioridad.values());
 
     return "index";
   }

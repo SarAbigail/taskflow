@@ -1,0 +1,53 @@
+:root {
+  --taskflow-primary: #1e3a8a;
+  --taskflow-secondary: #2563eb;
+  --taskflow-background: #f8fafc;
+  --taskflow-text: #0f172a;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--taskflow-background);
+  color: var(--taskflow-text);
+}
+
+.taskflow-navbar {
+  background-color: var(--taskflow-primary);
+}
+
+.dashboard-card {
+  height: 100%;
+  border: 0;
+  border-left: 4px solid var(--taskflow-secondary);
+}
+
+.dashboard-label {
+  margin-bottom: 0.5rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.dashboard-number {
+  margin-bottom: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.empty-state {
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.table thead th {
+  padding: 1rem;
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.table tbody td {
+  padding: 1rem;
+}

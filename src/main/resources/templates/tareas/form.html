@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title th:text="${
+            tarea.id == null
+            ? 'Nueva tarea | TaskFlow'
+            : 'Editar tarea | TaskFlow'
+        }">
+    TaskFlow
+  </title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-dark taskflow-navbar">
+    <div class="container">
+      <a class="navbar-brand fw-bold" th:href="@{/}">
+        TaskFlow
+      </a>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+
+    <div class="row justify-content-center">
+
+      <div class="col-12 col-lg-8">
+
+        <div class="mb-4">
+
+          <a class="text-decoration-none" th:href="@{/}">
+            ← Volver al listado
+          </a>
+
+          <h1 class="fw-bold mt-3" th:text="${
+                            tarea.id == null
+                            ? 'Registrar nueva tarea'
+                            : 'Editar tarea'
+                        }">
+            Registrar tarea
+          </h1>
+
+          <p class="text-muted">
+            Completa la información solicitada.
+          </p>
+
+        </div>
+
+        <div class="card shadow-sm border-0">
+
+          <div class="card-body p-4">
+
+            <form th:action="@{/tareas/guardar}" th:object="${tarea}" method="post">
+
+              <input type="hidden" th:field="*{id}">
+
+              <div class="mb-3">
+
+                <label for="titulo" class="form-label">
+                  Título
+                </label>
+
+                <input type="text" id="titulo" class="form-control" th:classappend="${
+                                        #fields.hasErrors('titulo')
+                                        ? ' is-invalid'
+                                        : ''
+                                    }" th:field="*{titulo}" maxlength="100"
+                  placeholder="Ejemplo: Preparar informe final">
+
+                <div class="invalid-feedback" th:errors="*{titulo}">
+                </div>
+
+              </div>
+
+              <div class="mb-3">
+
+                <label for="descripcion" class="form-label">
+                  Descripción
+                </label>
+
+                <textarea id="descripcion" class="form-control" th:classappend="${
+                                        #fields.hasErrors('descripcion')
+                                        ? ' is-invalid'
+                                        : ''
+                                    }" th:field="*{descripcion}" rows="4" maxlength="500"
+                  placeholder="Describe brevemente la tarea">
+                                </textarea>
+
+                <div class="invalid-feedback" th:errors="*{descripcion}">
+                </div>
+
+              </div>
+
+              <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                  <label for="prioridad" class="form-label">
+                    Prioridad
+                  </label>
+
+                  <select id="prioridad" class="form-select" th:classappend="${
+                                            #fields.hasErrors('prioridad')
+                                            ? ' is-invalid'
+                                            : ''
+                                        }" th:field="*{prioridad}">
+
+                    <option value="">
+                      Selecciona una prioridad
+                    </option>
+
+                    <option th:each="prioridad : ${prioridades}" th:value="${prioridad}" th:text="${prioridad}">
+                    </option>
+
+                  </select>
+
+                  <div class="invalid-feedback" th:errors="*{prioridad}">
+                  </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                  <label for="estado" class="form-label">
+                    Estado
+                  </label>
+
+                  <select id="estado" class="form-select" th:classappend="${
+                                            #fields.hasErrors('estado')
+                                            ? ' is-invalid'
+                                            : ''
+                                        }" th:field="*{estado}">
+
+                    <option value="">
+                      Selecciona un estado
+                    </option>
+
+                    <option th:each="estado : ${estados}" th:value="${estado}" th:text="${
+                                                estado.name() == 'EN_PROGRESO'
+                                                ? 'EN PROGRESO'
+                                                : estado
+                                            }">
+                    </option>
+
+                  </select>
+
+                  <div class="invalid-feedback" th:errors="*{estado}">
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="mb-4">
+
+                <label for="fechaVencimiento" class="form-label">
+                  Fecha de vencimiento
+                </label>
+
+                <input type="date" id="fechaVencimiento" class="form-control" th:field="*{fechaVencimiento}">
+
+              </div>
+
+              <div class="d-flex justify-content-end gap-2">
+
+                <a class="btn btn-outline-secondary" th:href="@{/}">
+                  Cancelar
+                </a>
+
+                <button type="submit" class="btn btn-primary" th:text="${
+                                        tarea.id == null
+                                        ? 'Registrar tarea'
+                                        : 'Guardar cambios'
+                                    }">
+                  Guardar
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+
+</html>

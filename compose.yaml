@@ -1,16 +1,70 @@
+# services:
+#   postgres:
+#     image: postgres:17
+#     container_name: taskflow-postgres
+#     restart: unless-stopped
+#     environment:
+#       POSTGRES_DB: taskflow_db
+#       POSTGRES_USER: taskflow_user
+#       POSTGRES_PASSWORD: taskflow_password
+#     ports:
+#       - "5433:5432"
+#     volumes:
+#       - taskflow_postgres_data:/var/lib/postgresql/data
+
+# volumes:
+#   taskflow_postgres_data:
+
 services:
+
   postgres:
     image: postgres:17
     container_name: taskflow-postgres
     restart: unless-stopped
+
     environment:
       POSTGRES_DB: taskflow_db
       POSTGRES_USER: taskflow_user
       POSTGRES_PASSWORD: taskflow_password
+
     ports:
       - "5433:5432"
+
     volumes:
       - taskflow_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U taskflow_user -d taskflow_db
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: taskflow-app
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskflow_db
+      SPRING_DATASOURCE_USERNAME: taskflow_user
+      SPRING_DATASOURCE_PASSWORD: taskflow_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "false"
+      PORT: 8080
+
+    ports:
+      - "8080:8080"
+
 
 volumes:
   taskflow_postgres_data:
